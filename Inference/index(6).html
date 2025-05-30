@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Klasifikasi Noken</title>
+    <style>
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background: #e8f5e9; /* Hijau muda lembut */
+        padding: 2rem;
+        text-align: center;
+        color: #2e7d32; /* Hijau tua */
+      }
+      .container {
+        max-width: 900px;
+        margin: auto;
+        background: #ffffff;
+        padding: 2rem;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #1b5e20;
+        margin-bottom: 1.5rem;
+      }
+      input[type="file"] {
+        margin-top: 1rem;
+        padding: 0.5rem;
+        border-radius: 6px;
+        border: 1px solid #c8e6c9;
+        background-color: #f1f8e9;
+        cursor: pointer;
+      }
+      .result {
+        margin-top: 2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+      }
+      .preview-img {
+        max-width: 300px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border: 3px solid #a5d6a7;
+      }
+      .prediction {
+        font-size: 1.2rem;
+        text-align: left;
+        background: #f1f8e9;
+        padding: 1rem;
+        border-radius: 12px;
+        border-left: 6px solid #66bb6a;
+      }
+      .btn {
+        padding: 0.8rem 1.5rem;
+        background: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-top: 1.5rem;
+        font-size: 1rem;
+        transition: background 0.3s ease;
+      }
+      .btn:hover {
+        background: #388e3c;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Klasifikasi Jenis Noken</h1>
+
+      <!-- Form langsung ke /predict -->
+      <form action="/predict" method="post" enctype="multipart/form-data">
+        <input
+          type="file"
+          name="image"
+          accept="image/*"
+          required
+          onchange="previewImage(event)"
+        />
+        <br />
+        <img id="preview" class="preview-img" style="display: none" />
+        <br />
+        <button class="btn" type="submit">Klasifikasi</button>
+      </form>
+
+      {% if prediction %}
+      <div class="result">
+        <img class="preview-img" src="{{ image_url }}" alt="Uploaded Image" />
+        <div class="prediction">
+          <p><strong>Hasil Klasifikasi:</strong> {{ prediction }}</p>
+          <p><strong>Tingkat Keyakinan:</strong> {{ confidence }}</p>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <script>
+      function previewImage(event) {
+        const preview = document.getElementById("preview");
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            preview.src = e.target.result;
+            preview.style.display = "block";
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+    </script>
+  </body>
+</html>
